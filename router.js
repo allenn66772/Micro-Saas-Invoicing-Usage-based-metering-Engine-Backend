@@ -1,7 +1,7 @@
 const express=require("express")
 const { userRegisterController, userLoginController } = require("./Controller/userController")
 const jwtMiddleware=require("./Middleware/jwtMiddleware")
-const { createApiKeyController, getApiKeyController } = require("./Controller/apiKeyController")
+const { createApiKeyController, getApiKeyController, revokeApiKeyController } = require("./Controller/apiKeyController")
 
 //router
 const router=express.Router()
@@ -17,6 +17,8 @@ router.post("/generate-key",jwtMiddleware,createApiKeyController)
 
 //get key
 router.get("/get-apiKey",jwtMiddleware,getApiKeyController)
+//delete key
+router.delete("/revoke-key",jwtMiddleware,revokeApiKeyController)
 
 
 module.exports=router

@@ -71,3 +71,18 @@ exports.getApiKeyController = async (req, res) => {
     }
 
 }
+
+//delete api key
+exports.revokeApiKeyController=async(req,res)=>{
+    console.log("Inside revoke Api key controller");
+    try {
+        const userId = req.userId;
+        await User.findByIdAndUpdate(userId,{
+            $unset:{apiKey:1}
+        })
+        return res.status(200).json("Api Key revoked Successfully")
+    } catch (error) {
+        res.status(500).json(error)
+    }
+    
+}
