@@ -1,6 +1,6 @@
 const { hashApikey } = require("../utils/apiKeysUtils");
 
-const User=requiure("../Models/userModel.js")
+const User=require("../Models/userModel.js")
 
 
 const requireApiKey=async(req,res,next)=>{
