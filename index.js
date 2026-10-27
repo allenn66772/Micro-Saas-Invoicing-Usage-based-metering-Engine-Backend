@@ -11,7 +11,8 @@ const express = require("express")
 const cors=require("cors")
 
 //import router
-const router=require("./router")
+const router=require("./router");
+const { initBillingCron } = require("./jobs/billingCron");
 
 //require connection
 require("./connection")
@@ -27,6 +28,8 @@ expressServer.listen(PORT,()=>{
     console.log(`expressServer started running at port number ${PORT}`);
     
 })
+
+initBillingCron()
 
 expressServer.get("/",(req,res)=>{
     res.status(200).json(`<h1>expressServer started running and waiting for client request</h1>`)

@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const UsageEvent = require("../Models/eventModel")
 const Invoice = require("../Models/invoiceModel")
+const User =require("../Models/userModel")
 
 const { calculateMetricCost } = require("../services/billingEngine");
+const { buildInvoicePDF } = require("../services/pdfService");
 
 /**
  * Generate Invoice Endpoint
@@ -140,5 +142,41 @@ exports.markInvoicePaidController = async (req, res) => {
     } catch (error) {
         console.error("Error updating invoice status:", error);
         return res.status(500).json({ error: "Failed to update invoice status." });
+    }
+};
+
+exports.downloadInvoicePDFController = async (req, res) => {
+    try {
+        const customerId = req.userId;
+        const { id } = req.params;
+
+        // 1. Fetch invoice and ensure it belongs to the authenticated user
+        const invoice = await Invoice.findOne({ _id: id, customerId });
+        if (!invoice) {
+            return res.status(404).json({ error: "Invoice not found." });
+        }
+
+        // 2. Fetch customer details
+        const user = await User.findById(customerId).select("email username");
+
+        // 3. Set headers for binary file download
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename=invoice-${invoice.invoiceNumber}.pdf`
+        );
+
+        // 4. Stream PDF chunks directly to response
+        buildInvoicePDF(
+            invoice,
+            user || { email: "customer" },
+            (chunk) => res.write(chunk),
+            () => res.end()
+        );
+    } catch (error) {
+        console.error("PDF generation error:", error);
+        if (!res.headersSent) {
+            return res.status(500).json({ error: "Failed to generate invoice PDF." });
+        }
     }
 };

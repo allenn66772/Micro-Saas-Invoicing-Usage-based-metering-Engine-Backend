@@ -5,7 +5,7 @@ const { createApiKeyController, getApiKeyController, revokeApiKeyController } = 
 const requireApiKey = require("./Middleware/apiKeyMiddleware")
 const { recordSingleEventController, recordBatchEventController } = require("./Controller/eventController")
 const { getCurrentPeriodUsage } = require("./Controller/usageController")
-const { generateInvoiceController, getUserInvoicesController, getSingleInvoiceController } = require("./Controller/invoiceController")
+const { generateInvoiceController, getUserInvoicesController, getSingleInvoiceController, downloadInvoicePDFController } = require("./Controller/invoiceController")
 
 //router
 const router=express.Router()
@@ -41,6 +41,7 @@ router.get("/current-period",jwtMiddleware,getCurrentPeriodUsage)
 router.post("/generate-invoice",jwtMiddleware,generateInvoiceController)
 router.get("/get-all-invoice",jwtMiddleware,getUserInvoicesController)
 router.get("/get-invoice-by/:id",jwtMiddleware,getSingleInvoiceController)
+router.get("/invoices/:id/download", jwtMiddleware, downloadInvoicePDFController);
 
 
 module.exports=router
