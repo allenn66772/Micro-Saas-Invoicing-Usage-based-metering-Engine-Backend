@@ -1,5 +1,5 @@
 const express=require("express")
-const { userRegisterController, userLoginController } = require("./Controller/userController")
+const { userRegisterController, userLoginController, verifyOtpController } = require("./Controller/userController")
 const jwtMiddleware=require("./Middleware/jwtMiddleware")
 const { createApiKeyController, getApiKeyController, revokeApiKeyController } = require("./Controller/apiKeyController")
 const requireApiKey = require("./Middleware/apiKeyMiddleware")
@@ -11,9 +11,9 @@ const { generateInvoiceController, getUserInvoicesController, getSingleInvoiceCo
 const router=express.Router()
 //////////////USer Routes
 //User Register
-router.post("/register",userRegisterController)
-//user Login
-router.post("/login",userLoginController)
+router.post("/register", userRegisterController);
+router.post("/verify-code", verifyOtpController);
+router.post("/login", userLoginController);
 
 
 /////////////Api key Route
