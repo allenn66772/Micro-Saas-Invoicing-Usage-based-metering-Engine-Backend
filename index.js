@@ -22,9 +22,9 @@ const corsOptions = {
     allowedHeaders: ["Content-Type", "Authorization"]
 };
 
-// CORS must come before the routes
+// CORS must come before the routes.
+// cors() answers preflight OPTIONS requests automatically, so no separate options() route is needed.
 expressServer.use(cors(corsOptions));
-expressServer.options("*", cors(corsOptions)); // preflight (use "/*splat" on Express 5)
 expressServer.use(express.json());
 
 expressServer.get("/", (req, res) => {
